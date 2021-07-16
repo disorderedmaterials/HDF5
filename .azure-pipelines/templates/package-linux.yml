@@ -1,22 +1,14 @@
 steps:
   - bash: |
       set -ex
-      ci/scripts/prep-appimage -a Gudrun -v continuous -b bin/gudrun
-    displayName: 'Prepare AppDirs'
-  - bash: |
-      set -ex
-      echo -e "\nRetrieving linuxdeploy...\n"
-      wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O linuxdeploy.AppImage
-      echo -e "\nRetrieving qt plugin for linuxdeploy...\n"
-      wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-      chmod u+x ./linuxdeploy*.AppImage
-    displayName: 'Download linuxdeploy Tools'
-  - bash: |
-      set -ex
-      ./linuxdeploy.AppImage --appdir Gudrun-continuous.AppDir --output appimage
-    displayName: 'Create AppImages'
-  - bash: |
-      set -ex
+      TAG=$(cat tag)
+      HDF5_DIR=$(ls -d hdf5-*)
+      echo "Source dir is: ${HDF5_DIR}"
+      INSTALL_DIR="${HDF5_DIR}/build/${TAG}"
+      echo "Install dir is: ${INSTALL_DIR}"
+      cd ${HDF5_DIR}/build
+      zip -9rv ${TAG}-linux.zip ${TAG}
+      cd ../../
       mkdir packages
-      mv Gudrun-*-x86_64.AppImage packages
-    displayName: 'Move Artifacts'
+      mv ${HDF5_DIR}/build/${TAG}-linux.zip packages
+    displayName: 'Create Archive'
