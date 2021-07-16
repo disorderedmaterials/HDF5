@@ -1,5 +1,5 @@
 parameters:
-  - name: suffix:
+  - name: suffix
     default: 'unknown'
 
 steps:
