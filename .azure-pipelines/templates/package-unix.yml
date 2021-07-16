@@ -1,0 +1,17 @@
+parameters:
+  - name: suffix:
+    default: 'unknown'
+
+steps:
+  - bash: |
+      set -ex
+      TAG=$(cat tag)
+      HDF5_DIR=$(ls -d hdf5-*)
+      echo "Source dir is: ${HDF5_DIR}"
+      INSTALL_DIR="build/${TAG}"
+      echo "Install dir is: ${INSTALL_DIR}"
+      mkdir packages
+      cd build
+      zip -9rv ${TAG}-${{ parameters.suffix }}.zip ${TAG}
+      mv ${HDF5_DIR}/build/${TAG}-${{ parameters.suffix }}.zip ../packages
+    displayName: 'Create Archive'
