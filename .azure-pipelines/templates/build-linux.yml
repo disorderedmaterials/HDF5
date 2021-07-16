@@ -1,0 +1,27 @@
+parameters:
+  - name: extraflags
+    default: ''
+
+steps:
+  - bash: |
+      set -ex
+      sudo apt-get update -q
+      sudo apt-get install ninja-build gfortran libhdf5-dev
+    displayName: 'Install Prerequisites'
+  - bash: |
+      set -ex
+      TAG=$(cat tag)
+      wget https://github.com/HDFGroup/hdf5/archive/refs/tags/${TAG}.zip -O hdf5.zip
+      unzip hdf5.zip
+      rm hdf5.zip
+      HDF5_DIR=$(ls -d hdf-*)
+      echo "Source dir is: $HDF5_DIR"
+    displayName: 'Download HDF5'
+  - bash: |
+      set -ex
+      HDF5_DIR=$(ls -d hdf-*)
+      mkdir build
+      cd build
+      cmake ../${HDF5_DIR} -G "Ninja" ${{ parameters.extraflags }}
+      ninja
+    displayName: 'Build'
