@@ -13,5 +13,5 @@ steps:
       mkdir packages
       cd build
       zip -9rv ${TAG}-${{ parameters.suffix }}.zip ${TAG}
-      mv ${HDF5_DIR}/build/${TAG}-${{ parameters.suffix }}.zip ../packages
+      mv ${TAG}-${{ parameters.suffix }}.zip ../packages
     displayName: 'Create Archive'
