@@ -11,7 +11,7 @@ steps:
   - bash: |
       set -ex
       TAG=$(cat tag)
-    echo "Tag is: ${TAG}"
+      echo "Tag is: ${TAG}"
       wget https://github.com/HDFGroup/hdf5/archive/refs/tags/${TAG}.zip -O hdf5.zip
       unzip hdf5.zip
       rm hdf5.zip
