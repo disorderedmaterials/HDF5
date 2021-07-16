@@ -6,7 +6,7 @@ steps:
   - bash: |
       set -ex
       brew update-reset
-      brew install ninja
+      brew install ninja szip
     displayName: 'Install Prerequisites'
   - bash: |
       set -ex
