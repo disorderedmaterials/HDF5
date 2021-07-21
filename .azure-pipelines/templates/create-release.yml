@@ -10,6 +10,10 @@ stages:
         steps:
           - checkout: self
             persistCredentials: true
+          - bash: |
+              wget https://raw.githubusercontent.com/disorderedmaterials/scripts/master/update-release
+              chmod u+x ./update-release
+            displayName: 'Install Prerequisites'
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
@@ -34,7 +38,7 @@ stages:
           - bash: |
               set -ex
               TAG=$(cat tag)
-              ./ci/scripts/update-release -r disorderedmaterials/hdf5 -t ${TAG} -u -n "HDF5 @ ${TAG}" $(System.ArtifactsDirectory)/*-artifacts/*zip
+              ./update-release -r disorderedmaterials/hdf5 -t ${TAG} -u -n "HDF5 @ ${TAG}" $(System.ArtifactsDirectory)/*-artifacts/*zip
             env:
               GITHUB_TOKEN: $(REPO_SECRET)
             displayName: 'Create Versioned Release (GitHub)'
