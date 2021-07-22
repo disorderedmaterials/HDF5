@@ -37,8 +37,9 @@ stages:
             displayName: 'Download Windows Artifacts'
           - bash: |
               set -ex
-              TAG=$(cat tag | sed -e "s/hdf5-//g" -e "s/_/./g")
-              ./update-release -r disorderedmaterials/hdf5 -t ${TAG} -u -n "HDF5 @ ${TAG}" $(System.ArtifactsDirectory)/*-artifacts/*zip
+              TAG=$(cat tag)
+              VERSION=$(echo $TAG | sed -e "s/hdf5-//g" -e "s/_/./g")
+              ./update-release -r disorderedmaterials/hdf5 -t ${TAG} -u -n "HDF5 @ ${VERSION}" $(System.ArtifactsDirectory)/*-artifacts/*zip
             env:
               GITHUB_TOKEN: $(REPO_SECRET)
             displayName: 'Create Versioned Release (GitHub)'
