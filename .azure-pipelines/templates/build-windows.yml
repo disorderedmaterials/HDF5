@@ -49,8 +49,8 @@ steps:
       $ErrorActionPreference = 'Stop'
       $TAG = Get-Content -Path ./tag
       $HDF5_DIR = Get-ChildItem -Directory ./hdf5-*
-      $SZIP_INSTALL_DIR = (Get-ChildItem -Directory  ./build-szip).name
-      $ZLIB_INSTALL_DIR = (Get-ChildItem -Directory  ./build-zlib).name
+      $SZIP_INSTALL_DIR = (Get-ChildItem -Directory  ./build-szip).name + "/install"
+      $ZLIB_INSTALL_DIR = (Get-ChildItem -Directory  ./build-zlib).name + "/install"
       mkdir build
       cd build
       cmake $HDF5_DIR -G "MinGW Makefiles" ${{ parameters.extraflags }} -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DZLIB_DIR:path=$ZLIB_INSTALL_DIR -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./$TAG
