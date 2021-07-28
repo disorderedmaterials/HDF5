@@ -1,6 +1,8 @@
 parameters:
   - name: suffix
     default: 'unknown'
+  - name: zipcommand
+    default: "zip -9rv"
 
 steps:
   - bash: |
@@ -12,6 +14,6 @@ steps:
       echo "Install dir is: ${INSTALL_DIR}"
       mkdir packages
       cd build
-      zip -9rv ${TAG}-${{ parameters.suffix }}.zip ${TAG}
+      ${{ parameters.zipcommand }} ${TAG}-${{ parameters.suffix }}.zip ${TAG}
       mv ${TAG}-${{ parameters.suffix }}.zip ../packages
     displayName: 'Create Archive'
