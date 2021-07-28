@@ -20,6 +20,8 @@ steps:
       cmake $SZIP_DIR -G "MinGW Makefiles"  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
       cmake --build . --config Release
       cmake --install .
+      Remove-Item szip-config.cmake
+      Remove-Item szip-targets.cmake
     displayName: 'Compile SZIP'
   - powershell: |
       wget https://github.com/madler/zlib/archive/refs/tags/v1.2.11.zip -O zlib.zip
