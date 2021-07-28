@@ -14,8 +14,8 @@ steps:
       tar -zxvf szip.tar.gz
       Remove-Item szip.tar.gz
       $SZIP_DIR = Get-ChildItem -Directory ./szip-*
+      $SZIP_INSTALL_DIR = (Get-Location).path + "\szip-dist"
       mkdir build-szip
-      $SZIP_INSTALL_DIR = (Get-ChildItem -Directory  ./build-szip).name + "/install"
       cd build-szip
       cmake $SZIP_DIR -G "MinGW Makefiles"  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
       cmake --build . --config Release
@@ -28,8 +28,8 @@ steps:
       7z x zlib.zip
       Remove-Item zlib.zip
       $ZLIB_DIR = Get-ChildItem -Directory ./zlib-*
+      $ZLIB_INSTALL_DIR = (Get-Location).path + "\zlib-dist"
       mkdir build-zlib
-      $ZLIB_INSTALL_DIR = (Get-ChildItem -Directory  ./build-zlib).name + "/install"
       cd build-zlib
       cmake $ZLIB_DIR -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX:path=$ZLIB_INSTALL_DIR
       cmake --build . --config Release
@@ -51,11 +51,14 @@ steps:
       $ErrorActionPreference = 'Stop'
       $TAG = Get-Content -Path ./tag
       $HDF5_DIR = Get-ChildItem -Directory ./hdf5-*
-      $SZIP_INSTALL_DIR = (Get-ChildItem -Directory  ./build-szip).name + "/install"
-      $ZLIB_INSTALL_DIR = (Get-ChildItem -Directory  ./build-zlib).name + "/install"
+      $SZIP_INSTALL_DIR = (Get-Location).path + "\szip-dist\cmake"
+      echo $SZIP_INSTALL_DIR
+      ls $SZIP_INSTALL_DIR
+      $ZLIB_INSTALL_DIR = (Get-Location).path + "\zlib-dist"
+      ls $ZLIB_INSTALL_DIR
       mkdir build
       cd build
-      cmake $HDF5_DIR -G "MinGW Makefiles" ${{ parameters.extraflags }} -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DZLIB_DIR:path=$ZLIB_INSTALL_DIR -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./$TAG
+      cmake $HDF5_DIR -G "MinGW Makefiles" ${{ parameters.extraflags }} -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:string=STATIC -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DSZIP_INSTALL:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DZLIB_DIR:path=$ZLIB_INSTALL_DIR -DZLIB_INSTALL:path=$ZLIB_INSTALL_DIR -DCMAKE_Fortran_FLAGS:string="-Wl,--allow-multiple-definition" -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./$TAG
       cmake --build . --config Release
       cmake --install .
     displayName: 'Build'
