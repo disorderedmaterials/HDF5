@@ -6,8 +6,33 @@ steps:
   - bash: |
       set -ex
       brew update-reset
-      brew install ninja szip
+      brew install ninja
     displayName: 'Install Prerequisites'
+  - bash: |
+      wget https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz -O szip.tar.gz
+      tar -zxvf szip.tar.gz
+      rm szip.tar.gz
+      SZIP_DIR="$(pwd)/$(ls -d szip-*)"
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
+      mkdir build-szip
+      cd build-szip
+      cmake $SZIP_DIR -G Ninja  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
+      cmake --build . --config Release
+      cmake --install .
+      rm szip-config.cmake szip-targets.cmake
+    displayName: 'Compile SZIP'
+  - bash: |
+      wget https://github.com/madler/zlib/archive/refs/tags/v1.2.11.zip -O zlib.zip
+      unzip zlib.zip
+      rm zlib.zip
+      ZLIB_DIR="$(pwd)/$(ls -d zlib-*)"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
+      mkdir build-zlib
+      cd build-zlib
+      cmake $ZLIB_DIR -G Ninja -DCMAKE_INSTALL_PREFIX:path=$ZLIB_INSTALL_DIR
+      cmake --build . --config Release
+      cmake --install .
+    displayName: 'Compile ZLIB'
   - bash: |
       set -ex
       TAG=$(cat tag)
@@ -22,9 +47,11 @@ steps:
       set -ex
       TAG=$(cat tag)
       HDF5_DIR=$(ls -d hdf5-*)
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist/cmake"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
       mkdir build
       cd build
-      cmake ../${HDF5_DIR} -G "Ninja" ${{ parameters.extraflags }} -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG} -DCMAKE_Fortran_COMPILER:string="gfortran-9"
+      cmake ../${HDF5_DIR} -G "Ninja" ${{ parameters.extraflags }} -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_INSTALL:path=$SZIP_INSTALL_DIR -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DZLIB_INSTALL:path=$ZLIB_INSTALL_DIR -DZLIB_DIR:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG} -DCMAKE_Fortran_COMPILER:string="gfortran-9"
       ninja
       ninja install
     displayName: 'Build'
