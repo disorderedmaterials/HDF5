@@ -9,11 +9,15 @@ steps:
       set -ex
       TAG=$(cat tag)
       HDF5_DIR=$(ls -d hdf5-*)
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
       echo "Source dir is: ${HDF5_DIR}"
       INSTALL_DIR="build/${TAG}"
       echo "Install dir is: ${INSTALL_DIR}"
       mkdir packages
       cd build
+      cp ${SZIP_INSTALL_DIR}/lib/libszip-static.a ${TAG}/lib
+      cp ${ZLIB_INSTALL_DIR}/lib/libz*.a ${TAG}/lib
       ${{ parameters.zipcommand }} ${TAG}-${{ parameters.suffix }}.zip ${TAG}
       mv ${TAG}-${{ parameters.suffix }}.zip ../packages
     displayName: 'Create Archive'
