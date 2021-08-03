@@ -47,7 +47,7 @@ steps:
       set -ex
       TAG=$(cat tag)
       HDF5_DIR=$(ls -d hdf5-*)
-      SZIP_INSTALL_DIR="$(pwd)/szip-dist/cmake"
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist/share/cmake"
       ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
       mkdir build
       cd build
