@@ -15,8 +15,8 @@ runs:
       wget https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz -O szip.tar.gz
       tar -zxvf szip.tar.gz
       rm szip.tar.gz
-      $SZIP_DIR = `pwd`/szip-*
-      $SZIP_INSTALL_DIR = `pwd`/szip-dist
+      SZIP_DIR=`pwd`/szip-*
+      SZIP_INSTALL_DIR=`pwd`/szip-dist
       mkdir build-szip
       cd build-szip
       cmake $SZIP_DIR -G "MinGW Makefiles"  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
