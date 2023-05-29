@@ -68,6 +68,13 @@ runs:
       cmake --build . --config Release
       cmake --install .
 
+  - name: Upload Raw Build Artifacts
+    if: always()
+    uses: actions/upload-artifact@v3
+    with:
+      name: build
+      path: ${{ github.workspace }}/build
+
   - name: Create Zip
     shell: bash
     run: |
