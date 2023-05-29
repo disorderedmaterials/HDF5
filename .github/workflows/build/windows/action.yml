@@ -7,7 +7,7 @@ runs:
 
   - name: Install Prerequisites
     shell: powershell
-    run: choco install -y mingw
+    run: choco install -y wget
 
   - name: Compile SZIP
     shell: bash
