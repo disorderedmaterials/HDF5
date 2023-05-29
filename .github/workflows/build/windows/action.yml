@@ -16,7 +16,7 @@ runs:
       tar -zxvf szip.tar.gz
       Remove-Item szip.tar.gz
       $SZIP_DIR = Get-ChildItem -Directory ./szip-*
-      $SZIP_INSTALL_DIR = (Get-Location).path + "\szip-dist"
+      $SZIP_INSTALL_DIR = "${{ github.workspace }}/szip-dist"
       mkdir build-szip
       cd build-szip
       cmake $SZIP_DIR -G "MinGW Makefiles"  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
@@ -32,7 +32,7 @@ runs:
       7z x zlib.zip
       Remove-Item zlib.zip
       $ZLIB_DIR = Get-ChildItem -Directory ./zlib-*
-      $ZLIB_INSTALL_DIR = (Get-Location).path + "\zlib-dist"
+      $ZLIB_INSTALL_DIR = "${{ github.workspace }}/zlib-dist"
       mkdir build-zlib
       cd build-zlib
       cmake $ZLIB_DIR -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX:path=$ZLIB_INSTALL_DIR
