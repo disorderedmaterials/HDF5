@@ -7,7 +7,9 @@ runs:
 
   - name: Install Prerequisites
     shell: powershell
-    run: choco install -y wget
+    run: |
+      choco install -y wget
+      choco install -y mingw --version=10.3.0 --allow-downgrade
 
   - name: Compile SZIP
     shell: bash
