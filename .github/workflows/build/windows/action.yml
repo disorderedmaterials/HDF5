@@ -9,7 +9,7 @@ runs:
     shell: bash
     run: |
       choco install -y wget
-      choco install -y mingw
+      choco install -y mingw --version=8.1.0 --allow-downgrade
 
   - name: Compile SZIP
     shell: bash
