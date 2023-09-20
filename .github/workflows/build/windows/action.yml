@@ -9,7 +9,7 @@ runs:
     shell: powershell
     run: |
       choco install -y wget
-      choco install -y mingw --version=8.5.0 --allow-downgrade
+      choco install -y mingw
 
   - name: Compile SZIP
     shell: bash
