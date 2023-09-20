@@ -6,7 +6,7 @@ runs:
   steps:
 
   - name: Install Prerequisites
-    shell: powershell
+    shell: bash
     run: |
       choco install -y wget
       choco install -y mingw
