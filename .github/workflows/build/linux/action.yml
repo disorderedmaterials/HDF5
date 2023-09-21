@@ -58,11 +58,11 @@ runs:
       set -ex
       TAG=$(cat tag)
       HDF5_DIR=$(ls -d hdf5-*)
-      SZIP_INSTALL_DIR="$(pwd)/szip-dist/share/cmake"
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
       ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
       mkdir build
       cd build
-      cmake ../${HDF5_DIR} -G "Ninja" -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_INSTALL:path=$SZIP_INSTALL_DIR -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DZLIB_ROOT:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG}
+      cmake ../${HDF5_DIR} -G "Ninja" -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True -DZLIB_ROOT:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG}
       ninja
       ninja install
 
