@@ -1,0 +1,91 @@
+name: Build
+description: Build OSX artifacts
+
+runs:
+  using: "composite"
+  steps:
+
+  - name: Install Prerequisites
+    shell: bash
+    run: |
+      set -ex
+      brew update-reset
+      brew install ninja
+
+  - name: Compile SZIP
+    shell: bash
+    run: |
+      wget https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz -O szip.tar.gz
+      tar -zxvf szip.tar.gz
+      rm szip.tar.gz
+      SZIP_DIR="$(pwd)/$(ls -d szip-*)"
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
+      mkdir build-szip
+      cd build-szip
+      cmake $SZIP_DIR -G Ninja  -DCMAKE_INSTALL_PREFIX:path=$SZIP_INSTALL_DIR
+      cmake --build . --config Release
+      cmake --install .
+      rm szip-config.cmake szip-targets.cmake
+
+  - name: Compile ZLIB
+    shell: bash
+    run: |
+      wget https://github.com/madler/zlib/archive/refs/tags/v1.2.11.zip -O zlib.zip
+      unzip zlib.zip
+      rm zlib.zip
+      ZLIB_DIR="$(pwd)/$(ls -d zlib-*)"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
+      mkdir build-zlib
+      cd build-zlib
+      cmake $ZLIB_DIR -G Ninja -DCMAKE_INSTALL_PREFIX:path=$ZLIB_INSTALL_DIR
+      cmake --build . --config Release
+      cmake --install .
+
+  - name: Download HDF5
+    shell: bash
+    run: |
+      set -ex
+      TAG=$(cat tag)
+      echo "Tag is: ${TAG}"
+      wget https://github.com/HDFGroup/hdf5/archive/refs/tags/${TAG}.zip -O hdf5.zip
+      unzip hdf5.zip
+      rm hdf5.zip
+      HDF5_DIR=$(ls -d hdf5-*)
+      echo "Source dir is: ${HDF5_DIR}"
+
+  - name: Build
+    shell: bash
+    run: |
+      set -ex
+      TAG=$(cat tag)
+      HDF5_DIR=$(ls -d hdf5-*)
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
+      mkdir build
+      cd build
+      cmake ../${HDF5_DIR} -G "Ninja" -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True  -DZLIB_ROOT:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG} -DCMAKE_Fortran_COMPILER:string="gfortran-11"
+      ninja
+      ninja install
+
+  - name: Create Zip
+    shell: bash
+    run: |
+      set -ex
+      TAG=$(cat tag)
+      HDF5_DIR=$(ls -d hdf5-*)
+      SZIP_INSTALL_DIR="$(pwd)/szip-dist"
+      ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
+      echo "Source dir is: ${HDF5_DIR}"
+      INSTALL_DIR="build/${TAG}"
+      echo "Install dir is: ${INSTALL_DIR}"
+      mkdir packages
+      cd build
+      cp ${SZIP_INSTALL_DIR}/lib/libszip-static.a ${TAG}/lib
+      cp ${ZLIB_INSTALL_DIR}/lib/libz*.a ${TAG}/lib
+      zip -9rv ../packages/${TAG}-osx.zip ${TAG}
+
+  - name: Upload Raw Build Artifacts
+    uses: actions/upload-artifact@v3
+    with:
+      name: packages
+      path: ${{ github.workspace }}/packages
