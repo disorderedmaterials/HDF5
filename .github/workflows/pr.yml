@@ -6,7 +6,6 @@ on:
     - '*'
     paths-ignore:
     - '.github/workflows/continuous.yml'
-    - '.github/workflows/release.yml'
 
 jobs:
 
