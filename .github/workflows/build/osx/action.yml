@@ -85,7 +85,7 @@ runs:
       zip -9rv ../packages/${TAG}-osx.zip ${TAG}
 
   - name: Upload Raw Build Artifacts
-    uses: actions/upload-artifact@v3
+    uses: actions/upload-artifact@v4
     with:
       name: packages
       path: ${{ github.workspace }}/packages
