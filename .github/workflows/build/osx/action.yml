@@ -63,7 +63,7 @@ runs:
       ZLIB_INSTALL_DIR="$(pwd)/zlib-dist"
       mkdir build
       cd build
-      cmake ../${HDF5_DIR} -G "Ninja" -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True  -DZLIB_ROOT:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG} -DCMAKE_Fortran_COMPILER:string="gfortran-11"
+      cmake ../${HDF5_DIR} -G "Ninja" -DHDF5_BUILD_FORTRAN:bool=True -DHDF5_INSTALL_MOD_FORTRAN:bool=True -DSZIP_DIR:path=$SZIP_INSTALL_DIR -DHDF5_ENABLE_SZIP_SUPPORT:bool=True  -DZLIB_ROOT:path=$ZLIB_INSTALL_DIR -DHDF5_ENABLE_Z_LIB_SUPPORT:bool=True -DCMAKE_BUILD_TYPE:string=Release -DCMAKE_INSTALL_PREFIX:path=./${TAG} -DCMAKE_Fortran_COMPILER:string="gfortran-12"
       ninja
       ninja install
 
