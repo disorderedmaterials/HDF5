@@ -72,8 +72,8 @@ runs:
     if: always()
     uses: actions/upload-artifact@v4
     with:
-      name: build
-      path: ${{ github.workspace }}/build
+      name: build-windows
+      path: ${{ github.workspace }}/build-windows
 
   - name: Create Zip
     shell: bash
@@ -86,14 +86,14 @@ runs:
       echo "Source dir is: ${HDF5_DIR}"
       INSTALL_DIR="build/${TAG}"
       echo "Install dir is: ${INSTALL_DIR}"
-      mkdir packages
+      mkdir packages-windows
       cd build
       cp ${SZIP_INSTALL_DIR}/lib/libszip-static.a ${TAG}/lib
       cp ${ZLIB_INSTALL_DIR}/lib/libz*.a ${TAG}/lib
-      7z a ../packages/${TAG}-windows.zip ${TAG}
+      7z a ../packages-windows/${TAG}-windows.zip ${TAG}
 
   - name: Upload Raw Build Artifacts
-    uses: actions/upload-artifact@v3
+    uses: actions/upload-artifact@v4
     with:
-      name: packages
-      path: ${{ github.workspace }}/packages
+      name: packages-windows
+      path: ${{ github.workspace }}/packages-windows

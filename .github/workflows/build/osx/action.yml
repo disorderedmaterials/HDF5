@@ -78,14 +78,14 @@ runs:
       echo "Source dir is: ${HDF5_DIR}"
       INSTALL_DIR="build/${TAG}"
       echo "Install dir is: ${INSTALL_DIR}"
-      mkdir packages
+      mkdir packages-osx
       cd build
       cp ${SZIP_INSTALL_DIR}/lib/libszip-static.a ${TAG}/lib
       cp ${ZLIB_INSTALL_DIR}/lib/libz*.a ${TAG}/lib
-      zip -9rv ../packages/${TAG}-osx.zip ${TAG}
+      zip -9rv ../packages-osx/${TAG}-osx.zip ${TAG}
 
   - name: Upload Raw Build Artifacts
     uses: actions/upload-artifact@v4
     with:
-      name: packages
-      path: ${{ github.workspace }}/packages
+      name: packages-osx
+      path: ${{ github.workspace }}/packages-osx

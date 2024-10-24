@@ -77,14 +77,14 @@ runs:
       echo "Source dir is: ${HDF5_DIR}"
       INSTALL_DIR="build/${TAG}"
       echo "Install dir is: ${INSTALL_DIR}"
-      mkdir packages
+      mkdir packages-linux
       cd build
       cp ${SZIP_INSTALL_DIR}/lib/libszip-static.a ${TAG}/lib
       cp ${ZLIB_INSTALL_DIR}/lib/libz*.a ${TAG}/lib
-      zip -9rv ../packages/${TAG}-linux.zip ${TAG}
+      zip -9rv ../packages-linux/${TAG}-linux.zip ${TAG}
 
   - name: Upload Package Artifacts
     uses: actions/upload-artifact@v4
     with:
-      name: packages
-      path: ${{ github.workspace }}/packages
+      name: packages-linux
+      path: ${{ github.workspace }}/packages-linux
